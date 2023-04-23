@@ -1,0 +1,1 @@
+ Simple crud app that is creating book records. Instead of using a database, it uses a slice to store the data. Is's using gorilla/mux for creating routing.  
