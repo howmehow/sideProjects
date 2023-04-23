@@ -1,10 +1,15 @@
 Chatbot integrated in Slack app, using WIT.AI and Wolfram Search Query API. 
 
 You can run it with go run main.go after adding your own environmental variables in .env file:
+
 SLACK_BOT_TOKEN=""
+
 SLACK_APP_TOKEN=""
+
 WIT_AI_TOKEN=""
+
 WOLFRAM_APP_ID=""
+
 
 You will have to create app in https://api.slack.com/apps as well as  in https://developer.wolframalpha.com/portal/myapps/ and https://wit.ai/apps/ 
 
