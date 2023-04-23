@@ -1,0 +1,1 @@
+Chat bot integrated in Slack app, using WIT.AI and Wolfram Search Query API. 
