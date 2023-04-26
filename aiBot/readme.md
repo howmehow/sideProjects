@@ -28,3 +28,6 @@ You can find all required info in slack documentation. If for example you would 
 - channels:read
 - channels:write
 If there is any errors in the terminal, it might be with the scopes.
+
+Here is an example: 
+![image](https://user-images.githubusercontent.com/58289892/233854291-ac9a3c5a-d896-4e17-9847-2712579c8947.png)
