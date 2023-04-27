@@ -32,6 +32,7 @@ func main() {
 	show := flag.Bool("show", false, "show all todos")
 	help := flag.Bool("help", false, "get the list of commands")
 	hide := flag.Int("hide", 0, "hide a task from the list")
+	hideall := flag.Bool("hideall", false, "hide all done tasks from the list")
 	unhide := flag.Int("unhide", 0, "unhide a task from the list")
 	showall := flag.Bool("showall", false, "show all todos, even hidden")
 	cal10 := flag.Bool("cal10", false, "show ten next events from your calendar")
@@ -41,6 +42,8 @@ func main() {
 	calweek := flag.Bool("calweek", false, "show upcoming week")
 	calmonth := flag.Bool("calmonth", false, "show upcoming month")
 	calyear := flag.Bool("calyear", false, "show upcoming year")
+	movestart := flag.Int("movestart", 0, "move a task to the top of the list")
+	moveend := flag.Int("moveend", 0, "move a task to the bottom of the list")
 	flag.Parse()
 
 	todos := &todo.Todos{}
@@ -50,6 +53,24 @@ func main() {
 	}
 	todos.CheckForDoneItemsYesterday(todoFile)
 	switch {
+	case *movestart > 0:
+		err := todos.MoveStart(*movestart)
+		err = todos.Store(todoFile)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err.Error())
+			os.Exit(1)
+		}
+		events, _ := getEvents("")
+		todos.Print(false, events)
+	case *moveend > 0:
+		err := todos.MoveEnd(*moveend)
+		err = todos.Store(todoFile)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err.Error())
+			os.Exit(1)
+		}
+		events, _ := getEvents("")
+		todos.Print(false, events)
 	case *cal10:
 		events, _ := getEvents("10")
 		todos.Print(false, events)
@@ -80,6 +101,15 @@ func main() {
 		}
 		events, _ := getEvents("")
 		todos.Print(false, events)
+	case *hideall:
+		err := todos.HideAll()
+		err = todos.Store(todoFile)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err.Error())
+			os.Exit(1)
+		}
+		events, _ := getEvents("")
+		todos.Print(false, events)
 	case *unhide > 0:
 		err := todos.Unhide(*unhide)
 		err = todos.Store(todoFile)
@@ -102,7 +132,10 @@ func main() {
 		fmt.Println("-show ")
 		fmt.Println("-help ")
 		fmt.Println("-hide index")
+		fmt.Println("-hideall")
 		fmt.Println("-unhide index")
+		fmt.Println("-movestart index")
+		fmt.Println("-moveend index")
 		fmt.Println("-showall ")
 		fmt.Println("-cal10 ")
 		fmt.Println("-cal100 ")

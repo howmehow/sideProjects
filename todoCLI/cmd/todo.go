@@ -8,6 +8,7 @@ import (
 	"github.com/savioxavier/termlink"
 	"google.golang.org/api/calendar/v3"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -62,12 +63,54 @@ func (t *Todos) Delete(index int) error {
 	return nil
 }
 
+func (t *Todos) MoveStart(index int) error {
+	list := *t
+	if index <= 0 || index > len(list) {
+		return errors.New("invalid index")
+	}
+	itemToMove := list[index-1]
+	list = append(list[:index-1], list[index:]...)
+	newList := make([]item, 0)
+	newList = append(newList, itemToMove)
+	for _, item := range list {
+		newList = append(newList, item)
+	}
+	*t = newList
+	return nil
+}
+
+func (t *Todos) MoveEnd(index int) error {
+	list := *t
+	if index <= 0 || index > len(list) {
+		return errors.New("invalid index")
+	}
+	itemToMove := list[index-1]
+	newList := make([]item, 0)
+	list = append(list[:index-1], list[index:]...)
+	for _, item := range list {
+		newList = append(newList, item)
+	}
+	newList = append(newList, itemToMove)
+	*t = newList
+	return nil
+}
+
 func (t *Todos) Hide(index int) error {
 	list := *t
 	if index <= 0 || index > len(list) {
 		return errors.New("invalid index")
 	}
 	list[index-1].Hide = true
+	return nil
+}
+
+func (t *Todos) HideAll() error {
+	list := *t
+	for i, item := range list {
+		if item.Done == true && item.CompletedAt != nil {
+			list[i].Hide = true
+		}
+	}
 	return nil
 }
 
@@ -145,13 +188,23 @@ func (t *Todos) Print(all bool, events *calendar.Events) {
 		event := green(item.Summary)
 		startDate := item.Start.DateTime
 		if startDate == "" {
-			startDate = item.Start.Date + " (all day)"
+			startDate = item.Start.Date
+		} else {
+			startDate = strings.ReplaceAll(startDate, "T", " ")
+			startDate = startDate[:len(startDate)-9]
+		}
+		endDate := item.End.DateTime
+		if endDate == "" {
+			endDate = "(all day)"
+		} else {
+			endDate = strings.ReplaceAll(endDate, "T", " ")
+			endDate = endDate[:len(endDate)-9]
 		}
 		cellsCalendar = append(cellsCalendar, *&[]*simpletable.Cell{
 			{Text: fmt.Sprintf("%d", i)},
 			{Text: event},
 			{Text: startDate},
-			{Text: item.End.DateTime},
+			{Text: endDate},
 			{Text: termlink.ColorLink("@", item.HtmlLink, "italic green", true)},
 		})
 	}
@@ -197,7 +250,7 @@ func (t *Todos) Print(all bool, events *calendar.Events) {
 		}
 		var completedAt string
 		if item.CompletedAt != nil {
-			completedAt = item.CompletedAt.Format("2006-01-02 15:04:05")
+			completedAt = item.CompletedAt.Format("2006-01-02 15:04")
 		} else {
 			completedAt = ""
 		}
@@ -205,7 +258,7 @@ func (t *Todos) Print(all bool, events *calendar.Events) {
 			{Text: fmt.Sprintf("%d", i)},
 			{Text: task},
 			{Text: fmt.Sprintf("%t", item.Done)},
-			{Text: item.CreatedAt.Format("2006-01-02 15:04:05")},
+			{Text: item.CreatedAt.Format("2006-01-02 15:04")},
 			{Text: completedAt},
 		})
 	}
