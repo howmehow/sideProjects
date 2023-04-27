@@ -4,7 +4,7 @@
 
 Created task manager for terminal with golang, it can be connected to google calendar and show upcoming events. There is many options to play around with. Main idea is to log in to your google calendar through oauth2 and get upcoming events. Then you can add todos and mark them as completed. You can also hide tasks from the list and show them later. You can move tasks to the top or bottom of the list. 
 
-You can also show upcoming events from your calendar. You can also show upcoming events from your calendar for tomorrow, week, month, year or next 1000 events. Y
+You can also show upcoming events from your calendar. You can also show upcoming events from your calendar for tomorrow, week, month, year or next 1000 events. 
 
 I'm not planning to publish the app, as it's more of an app made for learning/I might be the only user, but if you want to use it, you can clone the repo and build it yourself.
 
