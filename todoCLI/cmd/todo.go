@@ -165,6 +165,7 @@ func (t *Todos) CheckForDoneItemsYesterday(filename string) {
 }
 
 func (t *Todos) Print(all bool, events *calendar.Events) {
+	fmt.Println("")
 	tableCalendar := simpletable.New()
 	tableCalendar.Header = &simpletable.Header{
 		Cells: []*simpletable.Cell{

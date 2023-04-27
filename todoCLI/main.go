@@ -231,7 +231,7 @@ func getEvents(show string) (*calendar.Events, error) {
 
 	t := time.Now().Format(time.RFC3339)
 	var events *calendar.Events
-	fmt.Println(show)
+
 	switch show {
 	case "10":
 		events, err = srv.Events.List("primary").ShowDeleted(false).
@@ -266,7 +266,6 @@ func getEvents(show string) (*calendar.Events, error) {
 	if err != nil {
 		log.Fatalf("Unable to retrieve next ten of the user's events: %v", err)
 	}
-	fmt.Println(events.Items)
 	return events, err
 }
 
